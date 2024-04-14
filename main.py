@@ -3,23 +3,22 @@ import mediapipe as mp
 import numpy as np
 import pandas as pd
 import pickle
-import matplotlib.pyplot as plt
 
 
 mp_drawing = mp.solutions.drawing_utils
 mp_holistic = mp.solutions.holistic
 
 
-def predict_cricket_shot(image_path):
+def predict_cricket_shot(image):
 
 	with open('body_language.pkl', 'rb') as f:
 		model = pickle.load(f)
 
 	with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5) as holistic:
 
-		frame = cv2.imread(image_path)
+		# frame = cv2.imread(image_path)
 
-		image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+		image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 		image.flags.writeable = False
 
 		# Make Detections
@@ -79,12 +78,13 @@ def predict_cricket_shot(image_path):
 		except:
 			pass
 
-		cv2.imshow("Cricket Shot detected", image)
-		cv2.waitKey(0)
-		cv2.destroyAllWindows()
+		# cv2.imshow("Cricket Shot detected", image)
+		# cv2.waitKey(0)
+		# cv2.destroyAllWindows()
 
 		return image
 
 
 if __name__ == "__main__":
-	predict_cricket_shot('sample1.jpg')
+	image = cv2.imread("sample.jpg")
+	predict_cricket_shot(image)
