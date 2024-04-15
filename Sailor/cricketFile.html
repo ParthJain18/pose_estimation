@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Image Upload</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<!-- <style>
+    body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+}
+
+.container {
+    width: 80%;
+    margin: auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+#drop_zone {
+    width: 100%;
+    height: 200px;
+    border: 2px dashed #bbb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+    cursor: pointer;
+    background-color: #fafafa;
+}
+
+#drop_zone.dragover {
+    border-color: #777;
+}
+
+#image_container {
+    display: flex;
+    overflow-x: auto;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+}
+
+#image_container img {
+    max-width: 400px;
+    margin: 10px;
+}
+
+button {
+    display: block;
+    margin: auto;
+    margin-bottom: 15px;
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+</style> -->
+<style>
+     
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        .container {
+            text-align: center;
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        input[type="file"] {
+            display: none;
+        }
+        label {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        label:hover {
+            background-color: #0056b3;
+        }
+        #file-info {
+            margin-top: 20px;
+        }
+    
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        .container {
+            text-align: center;
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        input[type="file"] {
+            display: none;
+        }
+        label {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        label:hover {
+            background-color: #0056b3;
+        }
+        #file-info {
+            margin-top: 20px;
+        }
+        #image-preview {
+            margin-top: 20px;
+        }
+        #image-preview img {
+            max-width: 100%;
+            max-height: 300px;
+            margin-top: 10px;
+        }
+   
+   
+</style>
+<body>
+    <!-- <div class="container">
+        <h1>Image Upload</h1>
+        <p>Drag and drop an image into the box below, or click the box to select an image.</p>
+        <div id="drop_zone">
+            
+            Drop files here or click to upload
+        <upload>
+
+        </upload>
+        </div>
+        <button id="clear_button">Clear Images</button>
+        <div id="image_container"></div>
+    </div>
+    <script>
+        let dropZone = document.getElementById('drop_zone');
+        let imageContainer = document.getElementById('image_container');
+        let clearButton = document.getElementById('clear_button');
+
+        // Add dragover and drop event listeners
+        dropZone.addEventListener('dragover', handleDragOver, false);
+        dropZone.addEventListener('drop', handleFileSelect, false);
+        dropZone.addEventListener('click', handleFileClick, false);
+        clearButton.addEventListener('click', handleClearClick, false);
+
+        function handleDragOver(e) {
+            e.stopPropagation();
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'copy'; 
+            dropZone.classList.add('dragover');
+        }
+
+        function handleFileSelect(e) {
+            e.stopPropagation();
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+
+            let files = e.dataTransfer ? e.dataTransfer.files : e.target.files;
+            if (files.length > 0) {
+                let file = files[0];
+                let reader = new FileReader();
+
+                reader.onloadend = function() {
+                    let base64data = reader.result.replace('data:' + file.type + ';base64,', '');
+                    // Replace the URL with your actual endpoint for handling image upload
+                    fetch('http://127.0.0.1:5000/cricketFile.html', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ image: base64data })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        let img = document.createElement('img');
+                        img.src = 'data:image/jpeg;base64,' + data.image;
+                        imageContainer.appendChild(img);
+                    });
+                }
+
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function handleFileClick() {
+            let fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.accept = 'image/*';
+            fileInput.addEventListener('change', handleFileSelect, false);
+            fileInput.click();
+        }
+
+        function handleClearClick() {
+            imageContainer.innerHTML = '';
+        } 
+    </script> -->
+    <div class="container">
+        <form action="/cricketFile.html" method="POST" enctype="multipart/form-data">
+            <h1>File Upload</h1>
+            <p>Select a file to upload:</p>
+            <input type="file" name="file" id="file-input" accept="image/*">
+            <label for="file-input">Choose File</label>
+            <div id="file-info"></div>
+            <div id="image-preview"></div>
+            <button type="submit">Upload File</button>
+        </form>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('file-input');
+        const fileInfo = document.getElementById('file-info');
+        const imagePreview = document.getElementById('image-preview');
+
+        fileInput.addEventListener('change', function() {
+            const file = this.files[0];
+            const fileSize = file.size / 1024 / 1024; // in MB
+            const fileType = file.type;
+
+            fileInfo.innerHTML = `
+                <p>File Name: ${file.name}</p>
+                <p>File Size: ${fileSize.toFixed(2)} MB</p>
+                <p>File Type: ${fileType}</p>
+            `;
+
+            // Display image preview
+            if (fileType.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = function() {
+                    const img = document.createElement('img');
+                    img.src = reader.result;
+                    imagePreview.innerHTML = '';
+                    imagePreview.appendChild(img);
+                };
+                reader.readAsDataURL(file);
+            } else {
+                imagePreview.innerHTML = '<p>File is not an image.</p>';
+            }
+        });
+    </script>
+</body>
+</html>
