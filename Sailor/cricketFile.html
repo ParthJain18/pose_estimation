@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Image Upload</title>
     <link rel="stylesheet" type="text/css" href="styles.css">
@@ -70,88 +71,112 @@ button:hover {
 }
 </style> -->
 <style>
-     
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f4f4f4;
-        }
-        .container {
-            text-align: center;
-            background-color: #fff;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        input[type="file"] {
-            display: none;
-        }
-        label {
-            background-color: #007bff;
-            color: #fff;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        label:hover {
-            background-color: #0056b3;
-        }
-        #file-info {
-            margin-top: 20px;
-        }
-    
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f4f4f4;
-        }
-        .container {
-            text-align: center;
-            background-color: #fff;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        input[type="file"] {
-            display: none;
-        }
-        label {
-            background-color: #007bff;
-            color: #fff;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        label:hover {
-            background-color: #0056b3;
-        }
-        #file-info {
-            margin-top: 20px;
-        }
-        #image-preview {
-            margin-top: 20px;
-        }
-        #image-preview img {
-            max-width: 100%;
-            max-height: 300px;
-            margin-top: 10px;
-        }
-   
-   
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f4f4f4;
+    }
+
+    .container {
+        text-align: center;
+        background-color: #fff;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    input[type="file"] {
+        display: none;
+    }
+
+    label {
+        background-color: #007bff;
+        color: #fff;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    label:hover {
+        background-color: #0056b3;
+    }
+
+    #file-info {
+        margin-top: 20px;
+    }
+
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f4f4f4;
+    }
+
+    .container {
+        text-align: center;
+        background-color: #fff;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    input[type="file"] {
+        display: none;
+    }
+
+    label {
+        background-color: #007bff;
+        color: #fff;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    label:hover {
+        background-color: #0056b3;
+    }
+
+    #file-info {
+        margin-top: 20px;
+    }
+
+    #image-preview {
+        margin-top: 20px;
+    }
+
+    #image-preview img {
+        max-width: 100%;
+        max-height: 400px;
+        margin-top: 10px;
+    }
+
+    #image_container {
+        display: flex;
+        overflow-x: auto;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+    }
+
+    #image_container img {
+        max-width: 400px;
+        margin: 10px;
+    }
 </style>
+
 <body>
+
     <!-- <div class="container">
         <h1>Image Upload</h1>
         <p>Drag and drop an image into the box below, or click the box to select an image.</p>
@@ -231,11 +256,12 @@ button:hover {
         <form action="/cricketFile.html" method="POST" enctype="multipart/form-data">
             <h1>File Upload</h1>
             <p>Select a file to upload:</p>
-            <input type="file" name="file" id="file-input" accept="image/*">
+            <input type="file" name="file" id="file-input" id='drop_zone' accept="image/*">
             <label for="file-input">Choose File</label>
             <div id="file-info"></div>
             <div id="image-preview"></div>
-            <button type="submit">Upload File</button>
+            <div id="image_container"></div>
+            <!-- <button type="submit">Upload File</button> -->
         </form>
     </div>
 
@@ -244,7 +270,7 @@ button:hover {
         const fileInfo = document.getElementById('file-info');
         const imagePreview = document.getElementById('image-preview');
 
-        fileInput.addEventListener('change', function() {
+        fileInput.addEventListener('change', function () {
             const file = this.files[0];
             const fileSize = file.size / 1024 / 1024; // in MB
             const fileType = file.type;
@@ -258,17 +284,60 @@ button:hover {
             // Display image preview
             if (fileType.startsWith('image/')) {
                 const reader = new FileReader();
-                reader.onload = function() {
-                    const img = document.createElement('img');
-                    img.src = reader.result;
-                    imagePreview.innerHTML = '';
-                    imagePreview.appendChild(img);
+                reader.onloadend = function () {
+                    let base64data = reader.result.replace('data:' + file.type + ';base64,', '');   
+                    fetch('http://localhost:5500/cricketFile.html', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ image: base64data })
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            let img = document.createElement('img');
+                            img.src = 'data:image/jpeg;base64,' + data.image;
+                            imagePreview.innerHTML = '';
+                            imagePreview.appendChild(img);
+                        });
+
+                    // const img = document.createElement('img');
+                    // img.src = reader.result;
+                    // imagePreview.innerHTML = '';
+                    // imagePreview.appendChild(img);
                 };
                 reader.readAsDataURL(file);
             } else {
                 imagePreview.innerHTML = '<p>File is not an image.</p>';
             }
+
+            // if (files.length > 0) {
+            //     let file = files[0];
+            //     let reader = new FileReader();
+
+            //     reader.onloadend = function () {
+            //         let base64data = reader.result.replace('data:' + file.type + ';base64,', '');
+            //         fetch('http://127.0.0.1:5500/Sailor/cricketFile.html', {
+            //             method: 'POST',
+            //             headers: {
+            //                 'Content-Type': 'application/json'
+            //             },
+            //             body: JSON.stringify({ image: base64data })
+            //         })
+            //             .then(response => response.json())
+            //             .then(data => {
+            //                 let img = document.createElement('img');
+            //                 img.src = 'data:image/jpeg;base64,' + data.image;
+            //                 imageContainer.appendChild(img);
+            //             });
+            //     }
+
+            //     reader.readAsDataURL(file);
+            // }
         });
+
+        // fileInput.addEventListener('click', handleFileClick, false);
     </script>
 </body>
+
 </html>

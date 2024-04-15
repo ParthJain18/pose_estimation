@@ -19,6 +19,7 @@ function handleFileSelect(e) {
     e.stopPropagation();
     e.preventDefault();
     dropZone.classList.remove('dragover');
+    console.log("File selected");
 
     let files = e.dataTransfer ? e.dataTransfer.files : e.target.files;
     if (files.length > 0) {
@@ -47,6 +48,8 @@ function handleFileSelect(e) {
 }
 
 function handleFileClick() {
+    console.log("File selected");
+
     let fileInput = document.createElement('input');
     fileInput.type = 'file';
     fileInput.accept = 'image/*';
